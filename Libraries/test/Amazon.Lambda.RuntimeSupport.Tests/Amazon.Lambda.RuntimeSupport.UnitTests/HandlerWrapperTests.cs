@@ -14,6 +14,7 @@
  */
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Serialization.Json;
+using AplHandlers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -101,6 +102,46 @@ namespace Amazon.Lambda.RuntimeSupport.UnitTests
             headers.Add(RuntimeApiHeaders.HeaderInvokedFunctionArn, new List<string>() { "invoked_function_arn" });
             _runtimeApiHeaders = new RuntimeApiHeaders(headers);
             _checkpoint = new Checkpoint();
+        }
+
+        [Fact]
+        public async Task TestAplAction() {
+            using (var handlerWrapper = HandlerWrapper.GetHandlerWrapper(() => {
+                var aplHandler = new AplHandler();
+                Action messageTarget = aplHandler.GetAction("ShowEmptyMessage");
+                messageTarget();
+                _checkpoint.Check();
+            })) {
+                await TestHandlerWrapper(handlerWrapper, EmptyBytes, EmptyBytes, false);
+            }
+        }
+
+        [Fact]
+        public async Task TestAplActionWithArguments() {
+            using (var handlerWrapper = HandlerWrapper.GetHandlerWrapper((input) => {
+                var stringValue = Serializer.Deserialize<string>(input);
+                var aplHandler = new AplHandler();
+                Action<string> messageTarget = aplHandler.GetActionWithArgument("ShowMessage");
+                messageTarget(stringValue);
+                _checkpoint.Check();
+            })) {
+                await TestHandlerWrapper(handlerWrapper, StringInputBytes, EmptyBytes, false);
+            }
+        }
+
+        [Fact]
+        public async Task TestAplFunction() {
+            using (var handlerWrapper = HandlerWrapper.GetHandlerWrapper((input, context) => {
+                var stringValue = Serializer.Deserialize<string>(input); 
+                var aplHandler = new AplHandler();
+                Func<string,string> messageTarget = aplHandler.GetFunc("AplEcho");
+                var result = messageTarget(stringValue);
+                _checkpoint.Check();
+                Assert.NotNull(context.AwsRequestId);
+                return result;
+            }, Serializer)) {
+                await TestHandlerWrapper(handlerWrapper, StringInputBytes, StringOutputBytes, false);
+            }
         }
 
         [Fact]
