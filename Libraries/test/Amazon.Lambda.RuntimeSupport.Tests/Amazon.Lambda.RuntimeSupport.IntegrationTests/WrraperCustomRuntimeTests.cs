@@ -24,11 +24,10 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace Amazon.Lambda.RuntimeSupport.IntegrationTests
 {
-    public class CustomRuntimeTest : CustomRuntimeBase {
+    public class WrraperCustomRuntimeTests : CustomRuntimeBase {
 #if SKIP_RUNTIME_SUPPORT_INTEG_TESTS
         [Fact(Skip = "Skipped intentionally by setting the SkipRuntimeSupportIntegTests build parameter.")]
 #else

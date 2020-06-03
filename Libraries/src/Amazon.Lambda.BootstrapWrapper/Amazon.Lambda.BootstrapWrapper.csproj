@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\buildtools\common.props" />
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <Description> Provides a wrapper over bootstrap and Lambda Runtime API Client to help you  to develop custom .NET Core Lambda Runtimes.</Description>
+    <AssemblyTitle>Amazon.Lambda.BootstrapWrapper</AssemblyTitle>
+    <AssemblyName>Amazon.Lambda.BootstrapWrapper</AssemblyName>
+    <PackageId>Amazon.Lambda.BootstrapWrapper</PackageId>
+    <PackageTags>AWS;Amazon;Lambda</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Amazon.Lambda.Core\Amazon.Lambda.Core.csproj" />
+    <ProjectReference Include="..\Amazon.Lambda.Serialization.Json\Amazon.Lambda.Serialization.Json.csproj" />
+    <ProjectReference Include="..\Amazon.Lambda.RuntimeSupport\Amazon.Lambda.RuntimeSupport.csproj" />
+  </ItemGroup>
+</Project>
